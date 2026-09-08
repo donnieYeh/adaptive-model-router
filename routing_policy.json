@@ -1,94 +1,182 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
+  "decision_questions": {
+    "quota_pressure": {
+      "question": "你当前的模型额度压力如何？",
+      "choices": {
+        "tight": "吃紧：优先压低额度消耗",
+        "normal": "正常：在需求区间中位取值",
+        "loose": "宽松：优先提高能力余量"
+      }
+    },
+    "latency_preference": {
+      "question": "你对这次任务的等待时间要求如何？",
+      "choices": {
+        "patient": "可以多等：愿意用时间换更低额度消耗",
+        "normal": "正常：有明显取舍时给我选",
+        "fast": "尽量快：优先展示低延迟方案"
+      }
+    }
+  },
+  "quota_to_requirement_position": {
+    "tight": 0.0,
+    "normal": 0.5,
+    "loose": 1.0
+  },
+  "capability_bands": {
+    "arc1": {
+      "A0": {
+        "range": [
+          0,
+          0
+        ],
+        "meaning": "无需抽象规则归纳"
+      },
+      "A1": {
+        "range": [
+          25,
+          45
+        ],
+        "meaning": "轻度规则识别/结构化推理"
+      },
+      "A2": {
+        "range": [
+          45,
+          65
+        ],
+        "meaning": "中等规则归纳与组合"
+      },
+      "A3": {
+        "range": [
+          65,
+          85
+        ],
+        "meaning": "较强抽象规则推理"
+      },
+      "A4": {
+        "range": [
+          85,
+          100
+        ],
+        "meaning": "高难/前沿抽象推理"
+      }
+    },
+    "arc2": {
+      "A0": {
+        "range": [
+          0,
+          0
+        ],
+        "meaning": "无需深层静态推理"
+      },
+      "A1": {
+        "range": [
+          10,
+          30
+        ],
+        "meaning": "轻度多步推理"
+      },
+      "A2": {
+        "range": [
+          30,
+          50
+        ],
+        "meaning": "中等多步/约束推理"
+      },
+      "A3": {
+        "range": [
+          45,
+          65
+        ],
+        "meaning": "明显复杂的多阶段推理"
+      },
+      "A4": {
+        "range": [
+          60,
+          80
+        ],
+        "meaning": "高难闭环静态推理"
+      },
+      "A5": {
+        "range": [
+          75,
+          95
+        ],
+        "meaning": "接近前沿的静态推理"
+      }
+    },
+    "arc3": {
+      "A0": {
+        "range": [
+          0,
+          0
+        ],
+        "meaning": "非 agentic / 不需要环境适应"
+      },
+      "A1": {
+        "range": [
+          0.1,
+          1
+        ],
+        "meaning": "极轻环境适应"
+      },
+      "A2": {
+        "range": [
+          1,
+          8
+        ],
+        "meaning": "有限探索与修正"
+      },
+      "A3": {
+        "range": [
+          5,
+          25
+        ],
+        "meaning": "明显的探索-行动-修正"
+      },
+      "A4": {
+        "range": [
+          20,
+          50
+        ],
+        "meaning": "长程 agentic 推理"
+      },
+      "A5": {
+        "range": [
+          45,
+          70
+        ],
+        "meaning": "高难持续环境适应"
+      }
+    }
+  },
+  "cost_index": {
+    "model_multiplier": {
+      "gpt-5.6-luna": 1,
+      "gpt-5.6-terra": 10,
+      "gpt-5.6-sol": 20,
+      "gpt-6-astra": 40
+    },
+    "effort_multiplier": {
+      "medium": 1,
+      "high": 3,
+      "xhigh": 6,
+      "max": 10
+    },
+    "note": "User-supplied relative quota/compute assumptions. Luna Medium = 1x."
+  },
+  "option_generation": {
+    "max_options": 3,
+    "headroom_min_gain_points": 15,
+    "headroom_max_cost_ratio_vs_economy": 4.0,
+    "material_latency_ratio": 1.5,
+    "material_cost_ratio": 1.25
+  },
   "freshness": {
-    "max_age_hours": 168,
     "pricing_max_age_hours": 72,
+    "model_spec_max_age_hours": 168,
     "benchmark_max_age_hours": 168,
-    "latency_max_age_hours": 336
-  },
-  "capability_thresholds": {
-    "R": {
-      "0": {
-        "arc1": 20,
-        "arc2": 0,
-        "arc3": 0
-      },
-      "1": {
-        "arc1": 50,
-        "arc2": 10,
-        "arc3": 0
-      },
-      "2": {
-        "arc1": 0,
-        "arc2": 45,
-        "arc3": 0
-      },
-      "3": {
-        "arc1": 0,
-        "arc2": 75,
-        "arc3": 0
-      }
-    },
-    "A": {
-      "0": {
-        "arc1": 0,
-        "arc2": 0,
-        "arc3": 0
-      },
-      "1": {
-        "arc1": 0,
-        "arc2": 15,
-        "arc3": 0
-      },
-      "2": {
-        "arc1": 0,
-        "arc2": 45,
-        "arc3": 5
-      },
-      "3": {
-        "arc1": 0,
-        "arc2": 30,
-        "arc3": 25
-      }
-    }
-  },
-  "headroom": {
-    "Q": {
-      "0": 0,
-      "1": 3,
-      "2": 7,
-      "3": 12
-    },
-    "C": {
-      "0": 0,
-      "1": 2,
-      "2": 5,
-      "3": 8
-    }
-  },
-  "failure_risk": {
-    "base_risk": 0.2,
-    "margin_scale": 12.0,
-    "Q_multiplier": {
-      "0": 0.5,
-      "1": 1.0,
-      "2": 1.6,
-      "3": 2.2
-    },
-    "C_multiplier": {
-      "0": 0.8,
-      "1": 1.0,
-      "2": 1.3,
-      "3": 1.6
-    },
-    "max_risk": 0.75,
-    "recovery_cost_multiplier": 1.5
-  },
-  "latency": {
-    "preferred_workload": "openai_build_hours_reference",
-    "unknown_seconds_penalty": 9999
-  },
-  "fallback": {
-    "min_weighted_capability_gain": 8.0
+    "latency_max_age_hours": 336,
+    "hard_stale_multiplier": 4
   }
 }

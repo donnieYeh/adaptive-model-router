@@ -1,0 +1,363 @@
+CHECK:
+{
+  "pricing": {
+    "stale": false,
+    "age_hours": 0.0,
+    "urls": [
+      "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+      "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+      "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+      "https://developers.openai.com/api/docs/models/gpt-6-astra"
+    ]
+  },
+  "model_specs": {
+    "stale": false,
+    "age_hours": 0.0,
+    "urls": [
+      "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+      "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+      "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+      "https://developers.openai.com/api/docs/models/gpt-6-astra"
+    ]
+  },
+  "arc_benchmarks": {
+    "stale": false,
+    "age_hours": 0.0,
+    "urls": [
+      "https://arcprize.org/results/openai-gpt-5-6-luna-2026-07-30",
+      "https://arcprize.org/results/openai-gpt-5-6",
+      "https://arcprize.org/results/openai-gpt-6-astra"
+    ]
+  },
+  "latency": {
+    "stale": false,
+    "age_hours": 0.0,
+    "urls": [
+      "https://github.com/openai/build-hours/blob/main/27-valuemaxxing/data/openai-frontier-models.json"
+    ]
+  },
+  "refresh_required": false
+}
+
+ROUTE:
+{
+  "status": "USER_CHOICE_REQUIRED",
+  "user_policy": {
+    "quota_pressure": "tight",
+    "latency_preference": "patient"
+  },
+  "requirements": {
+    "arc1": {
+      "band": "A0",
+      "range": [
+        0,
+        0
+      ],
+      "selected": 0.0
+    },
+    "arc2": {
+      "band": "A3",
+      "range": [
+        45,
+        65
+      ],
+      "selected": 45.0
+    },
+    "arc3": {
+      "band": "A0",
+      "range": [
+        0,
+        0
+      ],
+      "selected": 0.0
+    }
+  },
+  "pareto_count": 10,
+  "options": [
+    {
+      "model": "gpt-5.6-luna",
+      "display_name": "GPT-5.6 Luna",
+      "effort": "max",
+      "capability": {
+        "arc1": 90.7,
+        "arc2": 59.6,
+        "arc3": 0.18
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 14.600000000000001,
+      "cost_index": 10,
+      "estimated_api_cost_usd": 0.0054,
+      "latency_seconds": 340.672,
+      "latency_source": "reference",
+      "role": "economy"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "display_name": "GPT-5.6 Terra",
+      "effort": "high",
+      "capability": {
+        "arc1": 92.0,
+        "arc2": 67.1,
+        "arc3": 0.49
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 22.099999999999994,
+      "cost_index": 30,
+      "estimated_api_cost_usd": 0.054,
+      "latency_seconds": 25.766,
+      "latency_source": "reference",
+      "role": "fast"
+    }
+  ],
+  "recommended": {
+    "model": "gpt-5.6-luna",
+    "effort": "max",
+    "role": "economy"
+  },
+  "pareto_frontier": [
+    {
+      "model": "gpt-5.6-luna",
+      "display_name": "GPT-5.6 Luna",
+      "effort": "max",
+      "capability": {
+        "arc1": 90.7,
+        "arc2": 59.6,
+        "arc3": 0.18
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 14.600000000000001,
+      "cost_index": 10,
+      "estimated_api_cost_usd": 0.0054,
+      "latency_seconds": 340.672,
+      "latency_source": "reference",
+      "role": "economy"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "display_name": "GPT-5.6 Sol",
+      "effort": "medium",
+      "capability": {
+        "arc1": 92.5,
+        "arc2": 67.1,
+        "arc3": 1.07
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 22.099999999999994,
+      "cost_index": 20,
+      "estimated_api_cost_usd": 0.098,
+      "latency_seconds": 44.672,
+      "latency_source": "reference"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "display_name": "GPT-5.6 Terra",
+      "effort": "high",
+      "capability": {
+        "arc1": 92.0,
+        "arc2": 67.1,
+        "arc3": 0.49
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 22.099999999999994,
+      "cost_index": 30,
+      "estimated_api_cost_usd": 0.054,
+      "latency_seconds": 25.766,
+      "latency_source": "reference",
+      "role": "fast"
+    },
+    {
+      "model": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "effort": "medium",
+      "capability": {
+        "arc1": 97.5,
+        "arc2": 92.1,
+        "arc3": 38.59
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 47.099999999999994,
+      "cost_index": 40,
+      "estimated_api_cost_usd": 0.245,
+      "latency_seconds": null,
+      "latency_source": "unknown"
+    },
+    {
+      "model": "gpt-5.6-terra",
+      "display_name": "GPT-5.6 Terra",
+      "effort": "xhigh",
+      "capability": {
+        "arc1": 94.0,
+        "arc2": 74.2,
+        "arc3": 0.65
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 29.200000000000003,
+      "cost_index": 60,
+      "estimated_api_cost_usd": 0.054,
+      "latency_seconds": 54.169,
+      "latency_source": "reference"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "display_name": "GPT-5.6 Sol",
+      "effort": "high",
+      "capability": {
+        "arc1": 97.0,
+        "arc2": 85.4,
+        "arc3": 2.15
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 40.400000000000006,
+      "cost_index": 60,
+      "estimated_api_cost_usd": 0.098,
+      "latency_seconds": 55.966,
+      "latency_source": "reference"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "display_name": "GPT-5.6 Sol",
+      "effort": "xhigh",
+      "capability": {
+        "arc1": 97.5,
+        "arc2": 90.0,
+        "arc3": 6.99
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 45.0,
+      "cost_index": 120,
+      "estimated_api_cost_usd": 0.098,
+      "latency_seconds": 338.598,
+      "latency_source": "reference"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "display_name": "GPT-5.6 Sol",
+      "effort": "max",
+      "capability": {
+        "arc1": 96.5,
+        "arc2": 92.5,
+        "arc3": 7.78
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 47.5,
+      "cost_index": 200,
+      "estimated_api_cost_usd": 0.098,
+      "latency_seconds": 348.223,
+      "latency_source": "reference"
+    },
+    {
+      "model": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "effort": "xhigh",
+      "capability": {
+        "arc1": 98.5,
+        "arc2": 93.3,
+        "arc3": 59.34
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 48.3,
+      "cost_index": 240,
+      "estimated_api_cost_usd": 0.245,
+      "latency_seconds": null,
+      "latency_source": "unknown"
+    },
+    {
+      "model": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "effort": "max",
+      "capability": {
+        "arc1": 97.5,
+        "arc2": 95.0,
+        "arc3": 62.71
+      },
+      "required": {
+        "arc1": 0.0,
+        "arc2": 45.0,
+        "arc3": 0.0
+      },
+      "failed_axes": [],
+      "headroom": 50.0,
+      "cost_index": 400,
+      "estimated_api_cost_usd": 0.245,
+      "latency_seconds": null,
+      "latency_source": "unknown"
+    }
+  ]
+}
+
+ERR:
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 720, in _warm_feature_flows
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 704, in _warm_collaboration_flows
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/generated/interface/models.py", line 32317, in hydrate_crdt_from_proto
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/rpc/remote.py", line 749, in __call__
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/rpc/client.py", line 150, in call
+artifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document.
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 720, in _warm_feature_flows
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/spreadsheet_warmup.py", line 704, in _warm_collaboration_flows
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/generated/interface/models.py", line 32317, in hydrate_crdt_from_proto
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/rpc/remote.py", line 749, in __call__
+  File "/tmp/tmp.L2TH2Y5coc/artifact_tool_v2-2.8.22/artifact_tool/rpc/client.py", line 150, in call
+artifact_tool.rpc.client.RemoteError: hydrateCrdtFromProto requires an empty collaborative document.

@@ -1,48 +1,226 @@
 ---
-name: adaptive-model-router
-description: Deterministic cost-aware model router. Luna XHigh performs semantic classification only; a local script selects the model using capability gates, economic cost, latency, and marginal return.
+name: adaptive-model-router-v3
+description: Stateless model router. Collects only quota/time preferences, refreshes model evidence, converts task semantics into capability bands, mathematically eliminates dominated candidates, and returns one best route or a small set of real trade-off options.
 ---
 
-# Adaptive Model Router
+# Adaptive Model Router V3
 
-## Architecture
+## Core principle
 
-Split routing into two layers.
+The Skill is stateless with respect to task history.
 
-### Layer A — semantic classifier (Luna XHigh)
+It does NOT learn user preferences from history and does NOT maintain empirical
+success telemetry. Each route is determined by:
 
-Do NOT choose the final model.
+`Current task + Current user policy + Current model matrix`
 
-Read the current task context and emit ONLY the routing parameters:
+The only semantic routing model should be Luna XHigh. Luna XHigh must not
+manually choose the final execution model.
+
+## 0. Collect only decision-relevant user information
+
+If the two values are not already supplied for the current route/session, ask:
+
+1. `quota_pressure`
+   - `tight` — 当前额度吃紧，优先降低额度消耗
+   - `normal` — 当前额度正常
+   - `loose` — 当前额度宽松，可提高能力余量
+
+2. `latency_preference`
+   - `patient` — 可以多等，愿意用时间换额度
+   - `normal` — 正常；有明显 trade-off 就给选项
+   - `fast` — 尽量快
+
+Do not ask "how much quality do you want". Higher quality is not a useful
+preference question.
+
+Do not ask users to quantify seconds-per-token, money-per-minute, or a utility
+coefficient.
+
+## 1. Refresh model evidence before routing
+
+Run:
+
+```bash
+python refresh_matrix.py --check
+```
+
+If `refresh_required=true`, follow `MODEL_MATRIX_REFRESH.md`.
+
+The executing agent is responsible for web/browser retrieval; the script is
+responsible for validation and atomic matrix update.
+
+Never update benchmark/pricing/model availability from model memory alone.
+
+## 2. Luna XHigh performs semantic classification only
+
+Do NOT ask Luna to output an exact "ARC2-equivalent = 57.3".
+
+Instead choose one discrete capability band for each axis:
 
 ```json
 {
-  "R": 0,
-  "A": 0,
-  "C": 0,
-  "Q": 0,
-  "input_tokens": 0,
-  "output_tokens": 0,
-  "cached_input_ratio": 0.0,
-  "stateful_agent_runtime": false,
-  "semantic_confidence": 0.8
+  "capability_profile": {
+    "arc1_band": "A0",
+    "arc2_band": "A3",
+    "arc3_band": "A0"
+  }
 }
 ```
 
-Definitions:
+Band definitions live in `routing_policy.json`.
 
-- `R`: static reasoning depth, 0–3.
-- `A`: agentic/environmental difficulty, 0–3.
-- `C`: context/state complexity, 0–3.
-- `Q`: reliability requirement, 0–3.
-- `input_tokens` / `output_tokens`: best estimates for the execution model, not the router itself.
-- `cached_input_ratio`: expected fraction of reusable cached input.
-- `stateful_agent_runtime`: true only if execution provides persistent reasoning/state machinery comparable to a provider adapter / durable agent state.
-- `semantic_confidence`: confidence in classification.
+Interpretation:
+- ARC1: rule abstraction / induction.
+- ARC2: deep static multi-step/compositional reasoning.
+- ARC3: adaptive agentic explore→act→observe→revise reasoning.
 
-The semantic classifier MUST NOT manually compare model prices, benchmark scores, or latency.
+Choose the band by matching qualitative task requirements to the band meanings.
+The deterministic router converts the band to an interval `[L,U]`.
 
-### Layer B — deterministic optimizer
+Example: ARC2 A3 = `[45,65]`.
+
+## 3. Quota pressure chooses position inside the requirement interval
+
+No subjective quality question is used.
+
+For every active capability axis:
+
+`Requirement = L + p × (U-L)`
+
+where:
+- tight → p=0
+- normal → p=0.5
+- loose → p=1
+
+Thus `[45,65]` becomes:
+- tight → 45
+- normal → 55
+- loose → 65
+
+This is a policy choice, not a claim that ARC score is a literal task success probability.
+
+## 4. Relative quota/compute matrix
+
+User-supplied model base multipliers:
+
+- Luna = 1
+- Terra = 10
+- Sol = 20
+- Astra = 40
+
+User-supplied effort multipliers:
+
+- Medium = 1
+- High = 3
+- XHigh = 6
+- Max = 10
+
+Compute Cost Index:
+
+`CCI(model,effort) = model_multiplier × effort_multiplier`
+
+Matrix:
+
+| | Medium | High | XHigh | Max |
+|---|---:|---:|---:|---:|
+| Luna | 1 | 3 | 6 | 10 |
+| Terra | 10 | 30 | 60 | 100 |
+| Sol | 20 | 60 | 120 | 200 |
+| Astra | 40 | 120 | 240 | 400 |
+
+This CCI is a relative quota/compute assumption. It is NOT the API invoice.
+Official token prices are kept separately in `model_matrix.json`.
+
+## 5. HOLD filter
+
+For candidate `i`, with capability vector `S_i` and task requirement `R`:
+
+`HOLD(i) iff S_i,k >= R_k for every active axis k`
+
+A candidate that fails HOLD is eliminated regardless of cost or speed.
+
+No weighted average may rescue a failed active capability axis.
+
+## 6. Mathematical elimination
+
+For each HOLD candidate compute:
+
+- capability headroom;
+- CCI;
+- estimated API direct cost when token estimates are supplied;
+- workload-specific latency estimate when available.
+
+Use 3D Pareto dominance.
+
+Candidate A dominates B only when A is:
+- no more expensive in CCI;
+- no slower when both have comparable known latency;
+- no lower in capability headroom;
+- strictly better in at least one dimension.
+
+Dominated candidates are removed.
+
+Unknown latency must never be treated as zero or used to claim time dominance.
+
+## 7. Generate representative choices, not a long model list
+
+From the Pareto frontier generate at most 3 roles:
+
+- `Economy`: lowest CCI that HOLDs.
+- `Fast`: lowest known latency that HOLDs.
+- `Headroom`: only when extra capability is materially larger and cost increase
+  remains within policy limits.
+
+If Economy == Fast and there is no material Headroom option:
+return `AUTO_SELECT`.
+
+If real trade-offs remain:
+return `USER_CHOICE_REQUIRED`.
+
+`latency_preference` changes presentation/recommendation only:
+- patient → put Economy first;
+- fast → put Fast first;
+- normal → do not invent a synthetic utility function; present choices.
+
+Do not convert time into money or token units.
+
+## 8. User-facing output
+
+For `AUTO_SELECT`, say approximately:
+
+"最优项：Luna XHigh。它满足当前能力要求，且在有效候选中同时没有更值得展示的成本/时间 trade-off。相对额度成本约 6×；参考延迟约 59 秒。"
+
+For `USER_CHOICE_REQUIRED`, show 2–3 concise options, e.g.:
+
+"A — Economy: Luna Max，约 10×额度成本，参考延迟约 341 秒，能力刚好覆盖。  
+B — Fast: Sol Medium，约 20×额度成本，参考延迟约 45 秒，能力余量更高。"
+
+Then ask the user to choose A/B.
+
+Always label benchmark latency as reference/workload-specific rather than a guarantee.
+
+## 9. Run deterministic router
+
+Build `task.json`:
+
+```json
+{
+  "capability_profile": {
+    "arc1_band": "A0",
+    "arc2_band": "A3",
+    "arc3_band": "A0"
+  },
+  "user_policy": {
+    "quota_pressure": "tight",
+    "latency_preference": "patient"
+  },
+  "input_tokens": 12000,
+  "output_tokens": 2500,
+  "cached_input_ratio": 0.0,
+  "stateful_agent_runtime": false
+}
+```
 
 Run:
 
@@ -50,109 +228,14 @@ Run:
 python router.py --task task.json
 ```
 
-The script:
+Do not manually override a HOLD rejection merely because a model is cheaper.
 
-1. reads `model_matrix.json`;
-2. reads `routing_policy.json`;
-3. calculates required ARC capability thresholds;
-4. applies the hard HOLD gate;
-5. eliminates incapable candidates;
-6. estimates direct and expected total economic cost;
-7. compares latency;
-8. uses marginal efficiency only as a final tie-break;
-9. returns route + fallback.
+## 10. Boundary conditions
 
-Objective order is strict:
-
-`HOLD > economic cost > latency > marginal return`
-
-This is lexicographic optimization, not a weighted-score contest.
-
----
-
-# Freshness / metadata update
-
-Before routing, inspect `model_matrix.json.meta.updated_at` and `routing_policy.json.freshness`.
-
-If metadata is stale, missing, or inconsistent, refresh it before relying on the result.
-
-Refresh sources in this order:
-
-1. Official OpenAI model documentation — model IDs, availability, effort support, context limits.
-2. Official OpenAI pricing — input / cached-input / output pricing.
-3. ARC Prize Verified Results — ARC-AGI-1 / 2 / 3 by model and effort.
-4. Reproducible fixed-workload latency sources or deployment-local telemetry.
-
-Important rules:
-
-- ARC-AGI-3 Standard Harness and Provider Adapter values must remain separate.
-- Use Standard Harness for cross-generation routing unless the execution runtime actually has equivalent persistent state.
-- Never store a latency number without workload identity and measurement date.
-- Never replace verified values with guesses after refresh failure.
-- If stale metadata can materially change the route, lower confidence or choose modest capability headroom.
-
-The data refresh operation may be implemented by an environment-specific fetch/update command. After refresh it must update:
-
-- `meta.updated_at`
-- per-source `last_checked_at`
-- per-source `last_success_at`
-- source `status`
-- `meta.change_log`
-
----
-
-# Semantic classification rubric
-
-## R
-- R0: transform/extract/rewrite/simple summarize/classify.
-- R1: infer/apply clear rules; ordinary structured analysis/debugging.
-- R2: substantial multi-step reasoning; interacting constraints; causal/hypothesis analysis.
-- R3: frontier closed-world reasoning; long dependency chains, difficult proofs/novel algorithms/research-grade synthesis.
-
-## A
-- A0: closed context.
-- A1: straightforward retrieval.
-- A2: adaptive investigation where findings determine next search/action.
-- A3: sustained explore → model → plan → act → observe → revise loop.
-
-## C
-- C0: small/local context.
-- C1: several docs/files/functions.
-- C2: large context with many cross-dependencies.
-- C3: evolving state across many actions/steps.
-
-## Q
-- Q0: cheap/easy-to-detect failure.
-- Q1: normal productivity.
-- Q2: meaningful rework/decision cost.
-- Q3: expensive, consequential, or hard-to-detect failure.
-
-Do not use task length, "coding", "math", or "web access" as direct proxies for difficulty.
-
----
-
-# Execution
-
-1. Perform semantic classification.
-2. Write classification to a temporary `task.json`.
-3. Run `router.py`.
-4. If router returns `NO_HOLD_CANDIDATE`, escalate to the strongest available runtime or return that no registered candidate meets the configured HOLD threshold.
-5. Otherwise dispatch to `route.model / route.effort`.
-6. If execution hits the fallback trigger, dispatch to the returned fallback.
-7. Record actual latency, tokens, retries, and outcome when telemetry is available. This telemetry should later feed a separate local latency/reliability dataset rather than overwriting public benchmark data.
-
----
-
-# Output to caller
-
-Return concise routing metadata:
-
-- Route
-- R/A/C/Q
-- metadata freshness
-- estimated cost
-- expected latency source
-- fallback
-- confidence
-
-Do not expose internal benchmark arithmetic unless diagnostics are requested.
+- If no candidate HOLDs: return `NO_HOLD_CANDIDATE`; do not silently choose a weaker model.
+- If latency is stale/unknown: still route by capability and CCI, but disclose
+  that time comparison is incomplete.
+- Provider Adapter ARC3 may only be used when the runtime really provides
+  comparable persisted reasoning state; otherwise use Standard ARC3.
+- Low/None are excluded from the default CCI routing matrix because the user
+  has not assigned relative effort multipliers to them.

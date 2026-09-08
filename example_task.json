@@ -1,11 +1,15 @@
 {
-  "R": 2,
-  "A": 0,
-  "C": 1,
-  "Q": 1,
+  "capability_profile": {
+    "arc1_band": "A0",
+    "arc2_band": "A3",
+    "arc3_band": "A0"
+  },
+  "user_policy": {
+    "quota_pressure": "tight",
+    "latency_preference": "patient"
+  },
   "input_tokens": 12000,
   "output_tokens": 2500,
   "cached_input_ratio": 0.0,
-  "stateful_agent_runtime": false,
-  "semantic_confidence": 0.9
+  "stateful_agent_runtime": false
 }

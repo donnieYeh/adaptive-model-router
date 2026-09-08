@@ -1,0 +1,11 @@
+{
+  "R": "integer 0..3",
+  "A": "integer 0..3",
+  "C": "integer 0..3",
+  "Q": "integer 0..3",
+  "input_tokens": "estimated integer",
+  "output_tokens": "estimated integer",
+  "cached_input_ratio": "0..1",
+  "stateful_agent_runtime": "boolean",
+  "semantic_confidence": "0..1"
+}

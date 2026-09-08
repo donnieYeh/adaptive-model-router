@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "freshness": {
+    "max_age_hours": 168,
+    "pricing_max_age_hours": 72,
+    "benchmark_max_age_hours": 168,
+    "latency_max_age_hours": 336
+  },
+  "capability_thresholds": {
+    "R": {
+      "0": {
+        "arc1": 20,
+        "arc2": 0,
+        "arc3": 0
+      },
+      "1": {
+        "arc1": 50,
+        "arc2": 10,
+        "arc3": 0
+      },
+      "2": {
+        "arc1": 0,
+        "arc2": 45,
+        "arc3": 0
+      },
+      "3": {
+        "arc1": 0,
+        "arc2": 75,
+        "arc3": 0
+      }
+    },
+    "A": {
+      "0": {
+        "arc1": 0,
+        "arc2": 0,
+        "arc3": 0
+      },
+      "1": {
+        "arc1": 0,
+        "arc2": 15,
+        "arc3": 0
+      },
+      "2": {
+        "arc1": 0,
+        "arc2": 45,
+        "arc3": 5
+      },
+      "3": {
+        "arc1": 0,
+        "arc2": 30,
+        "arc3": 25
+      }
+    }
+  },
+  "headroom": {
+    "Q": {
+      "0": 0,
+      "1": 3,
+      "2": 7,
+      "3": 12
+    },
+    "C": {
+      "0": 0,
+      "1": 2,
+      "2": 5,
+      "3": 8
+    }
+  },
+  "failure_risk": {
+    "base_risk": 0.2,
+    "margin_scale": 12.0,
+    "Q_multiplier": {
+      "0": 0.5,
+      "1": 1.0,
+      "2": 1.6,
+      "3": 2.2
+    },
+    "C_multiplier": {
+      "0": 0.8,
+      "1": 1.0,
+      "2": 1.3,
+      "3": 1.6
+    },
+    "max_risk": 0.75,
+    "recovery_cost_multiplier": 1.5
+  },
+  "latency": {
+    "preferred_workload": "openai_build_hours_reference",
+    "unknown_seconds_penalty": 9999
+  },
+  "fallback": {
+    "min_weighted_capability_gain": 8.0
+  }
+}

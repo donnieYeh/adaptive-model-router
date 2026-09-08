@@ -1,0 +1,11 @@
+{
+  "R": 2,
+  "A": 0,
+  "C": 1,
+  "Q": 1,
+  "input_tokens": 12000,
+  "output_tokens": 2500,
+  "cached_input_ratio": 0.0,
+  "stateful_agent_runtime": false,
+  "semantic_confidence": 0.9
+}

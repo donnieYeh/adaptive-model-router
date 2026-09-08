@@ -1,0 +1,428 @@
+{
+  "schema_version": 1,
+  "meta": {
+    "updated_at": "2026-09-08T05:49:44.979620Z",
+    "status": "seeded_needs_live_price_refresh",
+    "notes": [
+      "ARC values are seeded from the benchmark values discussed when this router was designed.",
+      "Run metadata refresh before production routing.",
+      "Pricing must be populated from current official OpenAI sources.",
+      "Latency values are workload-specific observations and must not be treated as universal."
+    ],
+    "change_log": []
+  },
+  "sources": {
+    "openai_models": {
+      "url": "https://developers.openai.com/api/docs/models",
+      "status": "needs_refresh"
+    },
+    "openai_pricing": {
+      "url": "https://openai.com/api/pricing/",
+      "status": "needs_refresh"
+    },
+    "arc_prize": {
+      "url": "https://arcprize.org/results",
+      "status": "needs_refresh"
+    },
+    "latency_reference": {
+      "status": "partial"
+    }
+  },
+  "update_plan": {
+    "sources": [
+      {
+        "name": "OpenAI model docs",
+        "purpose": [
+          "availability",
+          "efforts",
+          "context",
+          "model_ids"
+        ]
+      },
+      {
+        "name": "OpenAI pricing",
+        "purpose": [
+          "input_price",
+          "cached_input_price",
+          "output_price"
+        ]
+      },
+      {
+        "name": "ARC Prize verified results",
+        "purpose": [
+          "arc1",
+          "arc2",
+          "arc3",
+          "harness"
+        ]
+      },
+      {
+        "name": "OpenAI/independent fixed-workload latency benchmark",
+        "purpose": [
+          "latency"
+        ]
+      }
+    ]
+  },
+  "models": {
+    "gpt-5.6-luna": {
+      "display_name": "GPT-5.6 Luna",
+      "available": true,
+      "efforts": {
+        "low": {
+          "available": true,
+          "capability": {
+            "arc1": 34.2,
+            "arc2": 5.1,
+            "arc3_standard": 0.17
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {
+            "openai_build_hours_reference": {
+              "seconds": 8.1,
+              "comparable": true,
+              "status": "seeded_reference"
+            }
+          }
+        },
+        "medium": {
+          "available": true,
+          "capability": {
+            "arc1": 56.5,
+            "arc2": 7.4,
+            "arc3_standard": 0.17
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {
+            "openai_build_hours_reference": {
+              "seconds": 14.7,
+              "comparable": true,
+              "status": "seeded_reference"
+            }
+          }
+        },
+        "high": {
+          "available": true,
+          "capability": {
+            "arc1": 76.5,
+            "arc2": 29.3,
+            "arc3_standard": 0.1
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {
+            "openai_build_hours_reference": {
+              "seconds": 26.5,
+              "comparable": true,
+              "status": "seeded_reference"
+            }
+          }
+        },
+        "xhigh": {
+          "available": true,
+          "capability": {
+            "arc1": 87.7,
+            "arc2": 47.6,
+            "arc3_standard": 0.02
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {
+            "openai_build_hours_reference": {
+              "seconds": 59.3,
+              "comparable": true,
+              "status": "seeded_reference"
+            }
+          }
+        },
+        "max": {
+          "available": true,
+          "capability": {
+            "arc1": 88.0,
+            "arc2": 59.5,
+            "arc3_standard": 0.18
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {
+            "openai_build_hours_reference": {
+              "seconds": 340.7,
+              "comparable": true,
+              "status": "seeded_reference"
+            }
+          }
+        }
+      }
+    },
+    "gpt-5.6-terra": {
+      "display_name": "GPT-5.6 Terra",
+      "available": true,
+      "efforts": {
+        "low": {
+          "available": true,
+          "capability": {
+            "arc1": 60.2,
+            "arc2": 18.8,
+            "arc3_standard": 0.01
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "medium": {
+          "available": true,
+          "capability": {
+            "arc1": 77.0,
+            "arc2": 37.5,
+            "arc3_standard": 0.08
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "high": {
+          "available": true,
+          "capability": {
+            "arc1": 92.0,
+            "arc2": 67.1,
+            "arc3_standard": 0.49
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "xhigh": {
+          "available": true,
+          "capability": {
+            "arc1": 94.0,
+            "arc2": 74.2,
+            "arc3_standard": 0.65
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "max": {
+          "available": true,
+          "capability": {
+            "arc1": 96.5,
+            "arc2": 83.9,
+            "arc3_standard": 0.8
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        }
+      }
+    },
+    "gpt-5.6-sol": {
+      "display_name": "GPT-5.6 Sol",
+      "available": true,
+      "efforts": {
+        "low": {
+          "available": true,
+          "capability": {
+            "arc1": 74.5,
+            "arc2": 42.5,
+            "arc3_standard": 0.33
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "medium": {
+          "available": true,
+          "capability": {
+            "arc1": 92.5,
+            "arc2": 67.1,
+            "arc3_standard": 1.07
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "high": {
+          "available": true,
+          "capability": {
+            "arc1": 97.0,
+            "arc2": 85.4,
+            "arc3_standard": 2.15
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "xhigh": {
+          "available": true,
+          "capability": {
+            "arc1": 97.5,
+            "arc2": 90.0,
+            "arc3_standard": 6.99
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "max": {
+          "available": true,
+          "capability": {
+            "arc1": 96.5,
+            "arc2": 92.5,
+            "arc3_standard": 7.78
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        }
+      }
+    },
+    "gpt-6-astra": {
+      "display_name": "GPT-6 Astra",
+      "available": true,
+      "efforts": {
+        "low": {
+          "available": true,
+          "capability": {
+            "arc1": 96.5,
+            "arc2": 85.4,
+            "arc3_standard": 17.45,
+            "arc3_provider_adapter": 98.03
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "medium": {
+          "available": true,
+          "capability": {
+            "arc1": 97.5,
+            "arc2": 92.1,
+            "arc3_standard": 38.59,
+            "arc3_provider_adapter": 98.44
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "high": {
+          "available": true,
+          "capability": {
+            "arc1": 98.5,
+            "arc2": 92.1,
+            "arc3_standard": 54.82,
+            "arc3_provider_adapter": 99.95
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "xhigh": {
+          "available": true,
+          "capability": {
+            "arc1": 98.5,
+            "arc2": 93.3,
+            "arc3_standard": 59.34,
+            "arc3_provider_adapter": 98.44
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        },
+        "max": {
+          "available": true,
+          "capability": {
+            "arc1": 97.5,
+            "arc2": 95.0,
+            "arc3_standard": 62.71,
+            "arc3_provider_adapter": 98.55
+          },
+          "pricing_usd_per_million_tokens": {
+            "input": 0.0,
+            "cached_input": 0.0,
+            "output": 0.0,
+            "status": "NEEDS_REFRESH"
+          },
+          "latency": {}
+        }
+      }
+    }
+  }
+}
